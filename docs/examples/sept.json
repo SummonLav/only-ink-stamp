@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "settings": {
+    "color": "#217451",
+    "density": 0.83,
+    "variation": 0.45,
+    "edge": 0.63,
+    "edge_variation": 0.78,
+    "grain": 0.3,
+    "wear": 0.22,
+    "bleed": 0.12,
+    "threshold": 0.18,
+    "softness": 0.2,
+    "tolerance": 0.3,
+    "mode": "color",
+    "source_color": "#277f59",
+    "invert": false,
+    "seed": 26,
+    "region": [
+      0.609,
+      0.56,
+      0.278,
+      0.076
+    ],
+    "polygon": [],
+    "padding": 0.08,
+    "size": 1600
+  },
+  "source": {
+    "name": "source.jpg",
+    "sha256": "e1e5454af9db42c104644ce879fe631d2046057bd49b3f8eeae47dfb1f8e701e"
+  }
+}

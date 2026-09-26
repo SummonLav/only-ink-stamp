@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>印记 · Ink Stamp Studio</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 40 40%27%3E%3Crect width=%2740%27 height=%2740%27 rx=%275%27 fill=%27%23111111%27/%3E%3Ctext x=%277%27 y=%2730%27 fill=%27white%27 font-size=%2728%27%3E印%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="/style.css"></head>
+<body>
+<main>
+<section class="workbench">
+<article class="source-panel panel">
+<div class="panel-heading"><h2>原图</h2><button id="upload" class="text-button">更换图片</button></div>
+<input id="file" type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/bmp" hidden>
+<div id="drop-zone" class="source-wrap" title="拖入或粘贴图片，在图上选择区域"><canvas id="source" aria-label="输入图片，用鼠标框选或套索选择图案"></canvas></div>
+<div class="selection-tools" role="group" aria-label="选区工具"><button data-tool="rect" class="active" aria-pressed="true">框选</button><button data-tool="lasso" aria-pressed="false">套索</button><button id="all" title="使用整张图片">全图</button></div>
+<p id="selection-info" class="sr-only" role="status"></p>
+</article>
+<article class="preview-panel panel">
+<div class="panel-heading"><h2>印章</h2><div class="preview-tools"><button id="reseed" class="icon-button" aria-label="换一次落印" title="换一次落印">⟳</button><div class="backgrounds" role="group" aria-label="预览背景"><button data-bg="paper" class="active" aria-pressed="true">纸张</button><button data-bg="transparent" aria-pressed="false">透明</button></div></div></div>
+<div id="preview-stage" class="preview-stage"><img id="preview" alt="所选图案的油墨印章预览"><span id="preview-status" class="sr-only" role="status">正在上墨…</span></div>
+<div class="export-row"><select id="size" data-param="size" aria-label="导出图案长边尺寸" title="图案长边，四边另加 8% 留白"><option value="800">800 px</option><option value="1600">1600 px</option><option value="2400">2400 px</option><option value="3200">3200 px</option></select><button id="download" class="primary-button">导出 PNG</button><button id="save" class="secondary-button" title="保存透明图、纸张图和参数到本地输出目录">保存套装</button></div>
+</article>
+<aside class="controls-panel panel">
+<div class="panel-heading"><h2>调节</h2><button id="reset" class="text-button">重置</button></div>
+<div class="preset-row" role="group" aria-label="印章质感预设"><button data-preset="balanced" class="active" aria-pressed="true">自然</button><button data-preset="dry" aria-pressed="false">干墨</button><button data-preset="rich" aria-pressed="false">浓墨</button></div>
+<div class="control-section"><p class="control-title">印色 <span id="hex-label">#217451</span></p><div class="swatches"><button data-color="#217451" data-name="FOREST GREEN" style="--swatch:#217451" aria-label="松绿"></button><button data-color="#d74632" data-name="VERMILION" style="--swatch:#d74632" aria-label="朱红"></button><button data-color="#245ca2" data-name="COBALT BLUE" style="--swatch:#245ca2" aria-label="钴蓝"></button><button data-color="#bf4f8b" data-name="ROSE INK" style="--swatch:#bf4f8b" aria-label="玫红"></button><button data-color="#513b32" data-name="UMBER" style="--swatch:#513b32" aria-label="棕褐"></button><button data-color="#262822" data-name="CARBON BLACK" style="--swatch:#262822" aria-label="墨黑"></button><label class="custom-color" title="自选颜色"><span>＋</span><input id="color" data-param="color" type="color" aria-label="自选印章颜色"></label></div></div>
+<div class="control-section"><label class="range-label" for="density">油墨深浅 <output></output></label><input id="density" data-param="density" type="range" min="0" max="1" step=".01"><label class="range-label" for="variation">深浅起伏 <output></output></label><input id="variation" data-param="variation" type="range" min="0" max="1" step=".01"></div>
+<div class="control-section"><label class="range-label" for="edge">边缘积墨 <output></output></label><input id="edge" data-param="edge" type="range" min="0" max="1" step=".01"><label class="range-label" for="edge-variation">局部边缘 <output></output></label><input id="edge-variation" data-param="edge_variation" type="range" min="0" max="1" step=".01"></div>
+<div class="control-section"><label class="range-label" for="grain">颗粒 <output></output></label><input id="grain" data-param="grain" type="range" min="0" max="1" step=".01"><label class="range-label" for="wear">磨损 <output></output></label><input id="wear" data-param="wear" type="range" min="0" max="1" step=".01"><label class="range-label" for="bleed">洇墨 <output></output></label><input id="bleed" data-param="bleed" type="range" min="0" max="1" step=".01"></div>
+<details class="advanced"><summary>提取与选区</summary>
+<div class="extraction"><label for="mode">提取</label><select id="mode" data-param="mode"><option value="auto">自动去底</option><option value="luminance">按明暗</option><option value="color">指定颜色</option><option value="alpha">原图透明度</option></select></div>
+<div id="color-extraction" hidden><div class="source-color-row"><input id="source-color" type="color" data-param="source_color" aria-label="要提取的颜色"><button id="pick" class="text-button">吸色</button></div><label class="range-label" for="tolerance">颜色容差 <output></output></label><input id="tolerance" data-param="tolerance" type="range" min="0" max="1" step=".01"></div>
+<div id="tone-extraction"><label class="range-label" for="threshold">去底强度 <output></output></label><input id="threshold" data-param="threshold" type="range" min="0" max="1" step=".01"><label class="range-label" for="softness">保留灰阶 <output></output></label><input id="softness" data-param="softness" type="range" min="0" max="1" step=".01"></div>
+<label class="checkbox"><input id="invert" data-param="invert" type="checkbox"> 反转</label>
+<div class="coords"><label>X %<input id="cx" type="number" min="0" max="99.9" step=".1"></label><label>Y %<input id="cy" type="number" min="0" max="99.9" step=".1"></label><label>宽 %<input id="cw" type="number" min=".1" max="100" step=".1"></label><label>高 %<input id="ch" type="number" min=".1" max="100" step=".1"></label></div><button id="apply-region" class="text-button">应用选区</button>
+</details>
+<div class="recipe-actions"><button id="recipe" class="text-button">保存参数</button><button id="import" class="text-button">导入参数</button><input id="recipe-file" type="file" accept="application/json,.json" hidden></div>
+</aside>
+</section>
+</main><div id="toast" class="toast" role="status" hidden></div><script src="/app.js"></script>
+</body></html>

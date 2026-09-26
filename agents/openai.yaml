@@ -1,0 +1,4 @@
+interface:
+  display_name: "印记 · Ink Stamp"
+  short_description: "从图片选区制作有深浅、局部积墨与纸感的彩色印章，支持实时调节和透明导出"
+  default_prompt: "使用 $ink-stamp，把这张图片的指定区域做成印章，让我调整油墨深浅、局部边缘积墨和颜色。"
