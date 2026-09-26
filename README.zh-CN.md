@@ -33,6 +33,8 @@ git clone https://github.com/SummonLav/only-ink-stamp.git ~/.codex/skills/ink-st
 
 ## 直接在浏览器里玩
 
+**[打开 Only Ink Stamp ↗](https://scripts-tau-rose.vercel.app)**
+
 在线工坊完全在浏览器内运行：选择图片、框选图案、调节油墨，然后下载结果。无需安装 Python、登录账号或上传图片。「保存套装」会下载 ZIP，包含透明 PNG、纸张预览、原图与参数。
 
 ### 部署到 Vercel

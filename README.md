@@ -33,6 +33,8 @@ See [SKILL.md](SKILL.md) for the workflow and parameter reference.
 
 ## Play in your browser
 
+**[Open Only Ink Stamp ↗](https://scripts-tau-rose.vercel.app)**
+
 The web studio runs entirely in your browser: choose an image, select a region, adjust the ink, and download the result. No Python installation, account, or image upload is needed. “Save bundle” downloads a ZIP with the transparent PNG, paper preview, original image, and settings.
 
 ### Deploy to Vercel
