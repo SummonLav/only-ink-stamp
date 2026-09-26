@@ -2,17 +2,42 @@
 
 **English** · [简体中文](README.zh-CN.md)
 
-Turn a piece of an image into an ink stamp, with uneven pressure, pooled edges, and a little wear.
+The first tool in the only-xxx series: turn your favorite images into ink stamps.
 
-**Part of the Only series.** Only is a collection of small, playful tools. Each one does one thing: take a simple idea, make it fun to play with, and let you take the result with you. This one is all about ink stamps.
+## Start with the skill
+
+**1. Install once.** Paste this into Codex:
+
+```text
+Install the Codex skill from https://github.com/SummonLav/only-ink-stamp.
+```
+
+**2. Attach an image and run it.** For the example below:
+
+```text
+Use $ink-stamp to turn the MetroCard in the top right of this image into a blue ink stamp. Keep the text readable, vary the ink density, and make parts of the edges darker.
+```
+
+To choose the region and tune the result yourself, ask `$ink-stamp` to open the studio. The skill handles dependency setup and launches the local tool; you do not need to run server commands manually. Python 3.10+ is required.
+
+<details>
+<summary>Manual skill installation</summary>
+
+```sh
+git clone https://github.com/SummonLav/only-ink-stamp.git ~/.codex/skills/ink-stamp
+```
+
+See [SKILL.md](SKILL.md) for the workflow and parameter reference.
+
+</details>
 
 ## Before → After
 
-![Before and after: the SEPT. region selected in the original poster, beside the resulting green ink stamp](docs/images/comparison.png)
+![Before and after: the MetroCard selected in the original image, beside the resulting blue ink stamp](docs/images/comparison.png)
 
-The outline on the original marks the selected area. The stamp on the right uses that area, with adjustable ink color, pressure variation, edge pooling, and worn patches.
+The outline marks the MetroCard in the top right of the original image. The blue stamp on the right comes from that selection, with adjustable ink density, darker edges, and worn patches.
 
-[Original image](docs/images/source.jpg) · [Transparent stamp PNG](docs/images/stamp.png) · [Example settings](docs/examples/sept.json)
+[Original image](docs/images/source.png) · [Transparent stamp PNG](docs/images/stamp.png) · [Example settings](docs/examples/metrocard.json)
 
 ## What you can do
 
@@ -60,33 +85,19 @@ Open the example in the studio:
 
 ```sh
 .venv/bin/python scripts/studio.py \
-  --input docs/images/source.jpg \
-  --preset docs/examples/sept.json
+  --input docs/images/source.png \
+  --preset docs/examples/metrocard.json
 ```
 
 Or render it from the command line:
 
 ```sh
-.venv/bin/python scripts/stamp.py docs/images/source.jpg \
-  --preset docs/examples/sept.json \
-  --output stamp-outputs/sept.png
+.venv/bin/python scripts/stamp.py docs/images/source.png \
+  --preset docs/examples/metrocard.json \
+  --output stamp-outputs/metrocard.png
 ```
 
-This writes `sept.png`, `sept-paper.png`, and `sept.json`. The same input, settings, output size, and random seed produce the same result.
-
-## Use as a Codex skill
-
-The repository includes a reusable skill named **`$ink-stamp`**. Clone it into your skills directory:
-
-```sh
-git clone https://github.com/SummonLav/only-ink-stamp.git ~/.codex/skills/ink-stamp
-```
-
-Then describe what you want:
-
-> Use $ink-stamp to turn the flower in this image into a dark blue stamp, with a lighter center, darker patches along the edges, and a little wear.
-
-See [SKILL.md](SKILL.md) for the full workflow and parameter reference.
+This writes `metrocard.png`, `metrocard-paper.png`, and `metrocard.json`. The same input, settings, output size, and random seed produce the same result.
 
 ## Images and exports
 

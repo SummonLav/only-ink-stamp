@@ -4,13 +4,40 @@
 
 only-xxx 系列第一作：把你喜欢的图片变成油墨印章。
 
+## 直接用 Skill 开始
+
+**1. 安装一次。** 把下面这句话发给 Codex：
+
+```text
+安装这个仓库里的 Codex Skill：https://github.com/SummonLav/only-ink-stamp。
+```
+
+**2. 上传图片，直接调用。** 以下面的图片为例：
+
+```text
+使用 $ink-stamp，把这张图右上角的 MetroCard 做成蓝色油墨印章。保留清晰的文字，让油墨有深浅变化，部分边缘更深。
+```
+
+想自己选择区域、调节效果时，让 `$ink-stamp` 打开工坊即可。Skill 会处理依赖安装并启动本地工具，不需要手动运行服务命令。需要 Python 3.10+。
+
+<details>
+<summary>手动安装 Skill</summary>
+
+```sh
+git clone https://github.com/SummonLav/only-ink-stamp.git ~/.codex/skills/ink-stamp
+```
+
+完整的工作流程和参数说明见 [SKILL.md](SKILL.md)。
+
+</details>
+
 ## 原图 → 印章
 
-![原图与印章效果对比：左侧标出海报中的 SEPT. 选区，右侧为绿色油墨印章](docs/images/comparison.png)
+![原图与印章效果对比：左侧标出原图右上角的 MetroCard 选区，右侧为蓝色油墨印章](docs/images/comparison.png)
 
-左侧是原图，框线标出选区；右侧是从该区域提取的印章。油墨颜色、深浅起伏、局部边缘积墨和露白都可以调整。
+左侧框线标出原图右上角的 MetroCard；右侧是从该区域提取的蓝色印章。油墨深浅、局部边缘积墨和露白都可以调整。
 
-[查看原图](docs/images/source.jpg) · [下载透明印章 PNG](docs/images/stamp.png) · [示例参数](docs/examples/sept.json)
+[查看原图](docs/images/source.png) · [下载透明印章 PNG](docs/images/stamp.png) · [示例参数](docs/examples/metrocard.json)
 
 ## 可以怎么玩
 
@@ -56,33 +83,19 @@ Windows 下使用 `py -m venv .venv` 创建环境，并把后续的 `.venv/bin/p
 
 ```sh
 .venv/bin/python scripts/studio.py \
-  --input docs/images/source.jpg \
-  --preset docs/examples/sept.json
+  --input docs/images/source.png \
+  --preset docs/examples/metrocard.json
 ```
 
 或直接通过命令行生成：
 
 ```sh
-.venv/bin/python scripts/stamp.py docs/images/source.jpg \
-  --preset docs/examples/sept.json \
-  --output stamp-outputs/sept.png
+.venv/bin/python scripts/stamp.py docs/images/source.png \
+  --preset docs/examples/metrocard.json \
+  --output stamp-outputs/metrocard.png
 ```
 
-输出 `sept.png`、`sept-paper.png` 和 `sept.json`。同一张输入、同一组参数、相同尺寸和随机种子会生成相同结果。
-
-## 作为 Codex Skill 使用
-
-这个工具也附带一个可复用的 Skill，调用名为 **`$ink-stamp`**。将仓库克隆到技能目录即可：
-
-```sh
-git clone https://github.com/SummonLav/only-ink-stamp.git ~/.codex/skills/ink-stamp
-```
-
-然后可以这样描述需求：
-
-> 使用 $ink-stamp，把这张图里的花做成深蓝色印章，中心轻一点，部分边缘更深，保留少量露白。
-
-完整的运行方式和参数说明见 [SKILL.md](SKILL.md)。
+输出 `metrocard.png`、`metrocard-paper.png` 和 `metrocard.json`。同一张输入、同一组参数、相同尺寸和随机种子会生成相同结果。
 
 ## 关于图片与导出
 

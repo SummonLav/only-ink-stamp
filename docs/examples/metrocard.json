@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "settings": {
+    "color": "#245ca2",
+    "density": 0.9,
+    "variation": 0.35,
+    "edge": 0.78,
+    "edge_variation": 0.75,
+    "grain": 0.28,
+    "wear": 0.32,
+    "bleed": 0.08,
+    "threshold": 0.3,
+    "softness": 0.2,
+    "tolerance": 0.3,
+    "mode": "luminance",
+    "source_color": "#217451",
+    "invert": false,
+    "seed": 26,
+    "region": [
+      0.5092592592592593,
+      0.027777777777777776,
+      0.462037037037037,
+      0.3037037037037037
+    ],
+    "polygon": [],
+    "padding": 0.08,
+    "size": 1600
+  },
+  "source": {
+    "name": "source.png",
+    "sha256": "3420751f441d367b1eed03ce063e1df09ef5cf48bb68e9c997f80472070d9c08"
+  }
+}
