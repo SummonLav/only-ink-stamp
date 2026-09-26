@@ -11,6 +11,7 @@ let start, points = [], current, timer, requestId = 0, aborter, previewURL, last
 const canvas = $('#source'), ctx = canvas.getContext('2d', {willReadFrequently:true});
 function toast(message) { $('#toast').textContent = message; $('#toast').hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => $('#toast').hidden = true, 6500); }
 async function api(path, body, signal) {
+  if (window.InkBrowser) return window.InkBrowser.request(path, body, signal);
   const res = await fetch(path, {method:'POST',headers:{'Content-Type':'application/json','X-Stamp-Token':token},body:JSON.stringify(body),signal});
   if (!res.ok) { const data = await res.json(); throw Error(data.error || '处理失败'); }
   return res;
@@ -85,11 +86,11 @@ $$('[data-preset]').forEach(b=>b.onclick=()=>{Object.assign(config,presets[b.dat
 $$('[data-bg]').forEach(b=>b.onclick=()=>{$('#preview-stage').classList.toggle('transparent',b.dataset.bg==='transparent');$$('[data-bg]').forEach(x=>{x.classList.toggle('active',x===b);x.setAttribute('aria-pressed',x===b);});});
 $('#reset').onclick=()=>{Object.assign(config,presets.balanced,{color:defaults.color});refreshControls();$$('[data-preset]').forEach(b=>{b.classList.toggle('active',b.dataset.preset==='balanced');b.setAttribute('aria-pressed',b.dataset.preset==='balanced');});schedule();};
 $('#reseed').onclick=()=>{config.seed=crypto.getRandomValues(new Uint32Array(1))[0];schedule();};
-async function loadSource(){await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(Error('图片读取失败'));img.src='/api/source?v='+Date.now();});canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;draw();}
+async function loadSource(){await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(Error('图片读取失败'));img.src=window.InkBrowser ? window.InkBrowser.sourceURL() : '/api/source?v='+Date.now();});canvas.width=img.naturalWidth;canvas.height=img.naturalHeight;draw();}
 async function upload(file){
   if(!file)return;if(file.size>20*1024*1024)return toast('请使用小于 20 MB 的图片');
-  try{const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file);});
-    aborter?.abort();clearTimeout(timer);requestId++;const res=await api('/api/upload',{data,name:file.name});const result=await res.json();rev=result.rev;sourceName=file.name;config.region=[0,0,1,1];config.polygon=[];
+  try{const data=window.InkBrowser ? null : await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file);});
+    aborter?.abort();clearTimeout(timer);requestId++;const result=window.InkBrowser ? await window.InkBrowser.upload(file,file.name) : await (await api('/api/upload',{data,name:file.name})).json();rev=result.rev;sourceName=file.name;config.region=[0,0,1,1];config.polygon=[];
     await loadSource();refreshControls();schedule();toast('图片已载入，拖动选择一块图案');
   }catch(e){toast(e.message);}
 }
@@ -98,8 +99,8 @@ const drop=$('#drop-zone');['dragenter','dragover'].forEach(type=>drop.addEventL
 document.addEventListener('paste',e=>{const item=[...(e.clipboardData?.items||[])].find(i=>i.type.startsWith('image/'));if(item)upload(item.getAsFile());});
 function download(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 $('#download').onclick=async()=>{const b=$('#download');b.disabled=true;try{const res=await api('/api/export',{settings:config,rev});download(await res.blob(),'ink-stamp.png');toast('透明 PNG 已导出');}catch(e){toast(e.message);}finally{b.disabled=false;}};
-$('#save').onclick=async()=>{const b=$('#save');b.disabled=true;try{const res=await api('/api/save',{settings:config,rev});const data=await res.json();toast('已保存透明图、纸张图和参数：'+data.path);}catch(e){toast(e.message);}finally{b.disabled=false;}};
-$('#recipe').onclick=()=>download(new Blob([JSON.stringify({version:1,source:{name:sourceName},settings:config},null,2)],{type:'application/json'}),'ink-stamp-recipe.json');
+$('#save').onclick=async()=>{const b=$('#save');b.disabled=true;try{if(window.InkBrowser){download(await window.InkBrowser.bundle(config,rev),'ink-stamp.zip');toast('套装 ZIP 已下载');}else{const res=await api('/api/save',{settings:config,rev});const data=await res.json();toast('已保存透明图、纸张图和参数：'+data.path);}}catch(e){toast(e.message);}finally{b.disabled=false;}};
+$('#recipe').onclick=()=>download(new Blob([JSON.stringify(window.InkBrowser ? window.InkBrowser.recipe(config) : {version:1,source:{name:sourceName},settings:config},null,2)],{type:'application/json'}),'ink-stamp-recipe.json');
 $('#import').onclick=()=>$('#recipe-file').click();$('#recipe-file').onchange=async e=>{try{const recipe=JSON.parse(await e.target.files[0].text());const candidate={...defaults,...(recipe.settings||recipe)};const res=await api('/api/render',{settings:candidate,rev});await res.blob();config=candidate;refreshControls();draw();schedule();toast('参数已恢复；选区按当前图片应用');}catch(e){toast('参数读取失败：'+e.message);}finally{e.target.value='';}};
-async function boot(){try{const res=await fetch('/api/state');if(!res.ok)throw Error('工坊连接失败');const data=await res.json();config=data.settings;defaults=structuredClone(config);token=data.token;rev=data.rev;sourceName=data.name;refreshControls();await loadSource();schedule();}catch(e){toast(e.message);$('#preview-status').textContent='连接失败';}}
+async function boot(){try{let data;if(window.InkBrowser){data=await window.InkBrowser.state();}else{const res=await fetch('/api/state');if(!res.ok)throw Error('工坊连接失败');data=await res.json();}config=data.settings;defaults=structuredClone(config);token=data.token;rev=data.rev;sourceName=data.name;refreshControls();await loadSource();schedule();}catch(e){toast(e.message);$('#preview-status').textContent='连接失败';}}
 boot();

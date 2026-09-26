@@ -31,6 +31,23 @@ See [SKILL.md](SKILL.md) for the workflow and parameter reference.
 
 </details>
 
+## Play in your browser
+
+The web studio runs entirely in your browser: choose an image, select a region, adjust the ink, and download the result. No Python installation, account, or image upload is needed. “Save bundle” downloads a ZIP with the transparent PNG, paper preview, original image, and settings.
+
+### Deploy to Vercel
+
+Import this repository with **Root Directory left empty**, **Framework Preset: Other**, and the included `vercel.json`. It builds the static studio into `dist`; the `scripts` folder is not the project root. The default example is the pink MetroCard using luminance extraction.
+
+To build and preview the same web version locally (Node.js 20+):
+
+```sh
+npm run build
+python3 -m http.server 8080 --directory dist
+```
+
+Open `http://localhost:8080` in a current browser. Uploaded images stay in this tab; download a bundle before closing it. The browser and Python renderers share settings but use different texture generators. For an identical impression, reuse the same renderer, image, size, settings, and seed.
+
 ## Before → After
 
 ![Before and after: the MetroCard selected in the original image, beside the resulting pink ink stamp](docs/images/comparison.png)
@@ -109,6 +126,7 @@ This writes `metrocard.png`, `metrocard-paper.png`, and `metrocard.json`. The sa
 ## Checks
 
 ```sh
+npm test
 .venv/bin/python scripts/check_engine.py
 ```
 

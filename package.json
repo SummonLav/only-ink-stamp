@@ -1,0 +1,10 @@
+{
+  "name": "only-ink-stamp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-web.mjs",
+    "test": "node --test scripts/check_web.mjs"
+  }
+}

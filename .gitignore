@@ -7,3 +7,6 @@ __pycache__/
 .env.*
 stamp-outputs/
 outputs/
+dist/
+.vercel/
+node_modules/

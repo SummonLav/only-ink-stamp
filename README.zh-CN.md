@@ -31,6 +31,23 @@ git clone https://github.com/SummonLav/only-ink-stamp.git ~/.codex/skills/ink-st
 
 </details>
 
+## 直接在浏览器里玩
+
+在线工坊完全在浏览器内运行：选择图片、框选图案、调节油墨，然后下载结果。无需安装 Python、登录账号或上传图片。「保存套装」会下载 ZIP，包含透明 PNG、纸张预览、原图与参数。
+
+### 部署到 Vercel
+
+导入本仓库，**Root Directory 留空**，**Framework Preset 选择 Other**，使用随附的 `vercel.json`。构建后的静态页面位于 `dist`；不要把 `scripts` 设为项目根目录。默认示例为按明暗提取的粉色 MetroCard。
+
+在本地构建并预览同一在线版本（需要 Node.js 20+）：
+
+```sh
+npm run build
+python3 -m http.server 8080 --directory dist
+```
+
+用新版浏览器打开 `http://localhost:8080`。载入的图片仅保存在当前标签页中，关闭前请下载套装。浏览器版和 Python 版共用参数格式，但采用不同的纹理生成器；要复现同一次落印，需要使用相同渲染器、原图、尺寸、参数和种子。
+
 ## 原图 → 印章
 
 ![原图与印章效果对比：左侧标出原图右上角的 MetroCard 选区，右侧为粉色油墨印章](docs/images/comparison.png)
@@ -107,6 +124,7 @@ Windows 下使用 `py -m venv .venv` 创建环境，并把后续的 `.venv/bin/p
 ## 检查
 
 ```sh
+npm test
 .venv/bin/python scripts/check_engine.py
 ```
 
