@@ -15,7 +15,7 @@ Install the Codex skill from https://github.com/SummonLav/only-ink-stamp.
 **2. Attach an image and run it.** For the example below:
 
 ```text
-Use $ink-stamp to turn the MetroCard in the top right of this image into a blue ink stamp. Keep the text readable, vary the ink density, and make parts of the edges darker.
+Use $ink-stamp to turn the MetroCard in the top right of this image into a pink ink stamp using luminance extraction. Keep the text readable, vary the ink density, and make parts of the edges darker.
 ```
 
 To choose the region and tune the result yourself, ask `$ink-stamp` to open the studio. The skill handles dependency setup and launches the local tool; you do not need to run server commands manually. Python 3.10+ is required.
@@ -33,9 +33,9 @@ See [SKILL.md](SKILL.md) for the workflow and parameter reference.
 
 ## Before → After
 
-![Before and after: the MetroCard selected in the original image, beside the resulting blue ink stamp](docs/images/comparison.png)
+![Before and after: the MetroCard selected in the original image, beside the resulting pink ink stamp](docs/images/comparison.png)
 
-The outline marks the MetroCard in the top right of the original image. The blue stamp on the right comes from that selection, with adjustable ink density, darker edges, and worn patches.
+The outline marks the MetroCard in the top right of the original image. The pink stamp on the right comes from that selection using luminance extraction, with adjustable ink density, darker edges, and worn patches.
 
 [Original image](docs/images/source.png) · [Transparent stamp PNG](docs/images/stamp.png) · [Example settings](docs/examples/metrocard.json)
 
