@@ -35,7 +35,9 @@ See [SKILL.md](SKILL.md) for the workflow and parameter reference.
 
 **[Open Only Ink Stamp ↗](https://scripts-tau-rose.vercel.app)**
 
-The web studio runs entirely in your browser: choose an image, select a region, adjust the ink, and download the result. No Python installation, account, or image upload is needed. “Save bundle” downloads a ZIP with the transparent PNG, paper preview, original image, and settings.
+The web studio runs entirely in your browser. Upload multiple images to the thumbnail library, select a rectangle or the full image, and drag the four corners into a trapezoid or a custom quadrilateral. Each selection becomes an independently editable stamp on a poster. Click a stamp to return to its original image and settings; drag, resize, rotate, duplicate, and reorder stamps to arrange the composition. Hover just outside any corner and drag to rotate either a source selection or a poster stamp; the corner dots retain deformation/resize, and Shift snaps rotation to 15°.
+
+Posters default to **3:4**, with **1:1** and **9:16** options. Export the complete poster as an opaque PNG at a 1600, 2400, or 3200 px long edge, or download an individual stamp as a transparent PNG. Click **Save to Gallery** to keep a finished stamp: the **Gallery** tab lists every saved stamp, and each one can be re-edited with its original image and settings, placed on the poster again, downloaded as a transparent PNG, or deleted. Images, selections, ink settings, layout, and the Gallery are saved automatically in **IndexedDB** in this browser. No account or cloud upload is needed.
 
 ### Deploy to Vercel
 
@@ -48,7 +50,9 @@ npm run build
 python3 -m http.server 8080 --directory dist
 ```
 
-Open `http://localhost:8080` in a current browser. Uploaded images stay in this tab; download a bundle before closing it. The browser and Python renderers share settings but use different texture generators. For an identical impression, reuse the same renderer, image, size, settings, and seed.
+Open `http://localhost:8080` in a current browser. For development, `npm run dev` serves the source at `http://127.0.0.1:4173`; refresh after edits. Local saves belong to the same browser profile and site address, survive reloads, and are removed if you clear site data. Storage errors are shown with a retry action. Images are limited to 40 MB and 40 megapixels each.
+
+The Python studio below retains its single-stamp workflow and bundle export. Browser and Python renderers share settings but use different texture generators. For an identical impression, reuse the same renderer, image, size, settings, and seed.
 
 ## Before → After
 

@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Only Ink Stamp · Poster Studio</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 40 40%27%3E%3Crect width=%2740%27 height=%2740%27 rx=%275%27 fill=%27%23111111%27/%3E%3Ctext x=%277%27 y=%2730%27 fill=%27white%27 font-size=%2728%27%3E印%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="/poster.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <a class="wordmark" href="/" aria-label="Only Ink Stamp 首页"
+        ><span class="brand-icon">印</span
+        ><span
+          >Only Ink Stamp<span class="brand-sub">POSTER STUDIO</span></span
+        ></a
+      >
+      <nav class="view-tabs" aria-label="视图">
+        <a id="tab-studio" href="#studio" aria-current="page">工坊</a
+        ><a id="tab-gallery" href="#gallery"
+          >Gallery <span id="gallery-count" class="count">0</span></a
+        >
+      </nav>
+      <div class="header-actions">
+        <span id="storage-status" role="status">正在恢复…</span
+        ><button id="retry-save" class="text-button" hidden>重试保存</button
+        ><button id="upload" class="secondary-button">＋ 上传图片</button>
+      </div>
+    </header>
+    <input
+      id="file"
+      type="file"
+      accept="image/png,image/jpeg,image/webp,image/gif,image/bmp"
+      multiple
+      hidden
+    />
+    <main class="workbench" aria-busy="true">
+      <aside class="library-panel panel">
+        <div class="panel-heading">
+          <h2>图片</h2>
+          <span id="image-count" class="count">0</span>
+        </div>
+        <div id="image-list" class="image-list" aria-label="已上传图片"></div>
+        <button id="add-images" class="add-images" aria-label="添加更多图片">
+          ＋
+        </button>
+        <p class="library-note">保存在此浏览器</p>
+      </aside>
+      <section class="source-panel panel">
+        <div class="panel-heading">
+          <h2>原图 <span id="source-name"></span></h2>
+          <button
+            id="remove-source"
+            class="text-button"
+            title="从图片库移除当前图片"
+          >
+            移除
+          </button>
+        </div>
+        <div id="drop-zone" class="source-wrap">
+          <canvas
+            id="source"
+            aria-label="原图选区编辑器：拖动框选，拖动四角调整形状"
+          ></canvas>
+          <div id="source-empty" class="empty-state" hidden>
+            <span class="empty-icon">＋</span>
+            <p>拖入图片，开始制作</p>
+            <button id="empty-upload" class="secondary-button">选择图片</button>
+          </div>
+        </div>
+        <div class="source-toolbar">
+          <div class="selection-tools" role="group" aria-label="选区工具">
+            <button id="rect" class="active" aria-pressed="true">框选</button
+            ><button id="all" aria-pressed="false">全图</button>
+          </div>
+          <button id="new-stamp" class="text-button">＋ 新印章</button>
+        </div>
+        <div class="shape-row">
+          <span>形状</span>
+          <div class="shape-tools" role="group" aria-label="选区形状">
+            <button
+              data-shape="rect"
+              title="矩形"
+              aria-label="矩形"
+              aria-pressed="true"
+            >
+              <svg viewBox="0 0 28 22"><path d="M4 4h20v14H4z" /></svg></button
+            ><button
+              data-shape="trapezoid"
+              title="梯形"
+              aria-label="梯形"
+              aria-pressed="false"
+            >
+              <svg viewBox="0 0 28 22">
+                <path d="M8 4h12l5 14H3z" />
+              </svg></button
+            ><button
+              data-shape="slant"
+              title="平行四边形"
+              aria-label="平行四边形"
+              aria-pressed="false"
+            >
+              <svg viewBox="0 0 28 22">
+                <path d="M8 4h17l-5 14H3z" />
+              </svg></button
+            ><button
+              data-shape="diamond"
+              title="菱形"
+              aria-label="菱形"
+              aria-pressed="false"
+            >
+              <svg viewBox="0 0 28 22"><path d="m14 2 12 9-12 9L2 11z" /></svg>
+            </button>
+          </div>
+        </div>
+        <p class="hint" id="selection-info" role="status">
+          框选图案，拖动四个角自由调整形状。
+        </p>
+        <p class="hint" id="editing-label">新印章</p>
+      </section>
+      <aside class="controls-panel panel">
+        <div class="panel-heading">
+          <h2>印章调节</h2>
+          <button id="reset" class="text-button">重置</button>
+        </div>
+        <fieldset id="ink-controls">
+          <legend class="sr-only">当前印章效果</legend>
+          <div class="preset-row" role="group" aria-label="印章质感预设">
+            <button data-preset="balanced" class="active" aria-pressed="true">
+              自然</button
+            ><button data-preset="dry" aria-pressed="false">干墨</button
+            ><button data-preset="rich" aria-pressed="false">浓墨</button>
+          </div>
+          <div class="control-section">
+            <p class="control-title">
+              印色 <span id="hex-label">#217451</span>
+            </p>
+            <div class="swatches">
+              <button
+                data-color="#217451"
+                data-name="FOREST GREEN"
+                style="--swatch: #217451"
+                aria-label="松绿"
+              ></button
+              ><button
+                data-color="#d74632"
+                data-name="VERMILION"
+                style="--swatch: #d74632"
+                aria-label="朱红"
+              ></button
+              ><button
+                data-color="#245ca2"
+                data-name="COBALT BLUE"
+                style="--swatch: #245ca2"
+                aria-label="钴蓝"
+              ></button
+              ><button
+                data-color="#bf4f8b"
+                data-name="ROSE INK"
+                style="--swatch: #bf4f8b"
+                aria-label="玫红"
+              ></button
+              ><button
+                data-color="#513b32"
+                data-name="UMBER"
+                style="--swatch: #513b32"
+                aria-label="棕褐"
+              ></button
+              ><button
+                data-color="#262822"
+                data-name="CARBON BLACK"
+                style="--swatch: #262822"
+                aria-label="墨黑"
+              ></button
+              ><label class="custom-color" title="自选颜色"
+                ><span>＋</span
+                ><input
+                  id="color"
+                  data-param="color"
+                  type="color"
+                  aria-label="自选印章颜色"
+              /></label>
+            </div>
+          </div>
+          <div class="control-section">
+            <label class="range-label" for="density"
+              >油墨深浅 <output></output></label
+            ><input
+              id="density"
+              data-param="density"
+              type="range"
+              min="0"
+              max="1"
+              step=".01"
+            /><label class="range-label" for="variation"
+              >深浅起伏 <output></output></label
+            ><input
+              id="variation"
+              data-param="variation"
+              type="range"
+              min="0"
+              max="1"
+              step=".01"
+            />
+          </div>
+          <div class="control-section">
+            <label class="range-label" for="edge"
+              >边缘积墨 <output></output></label
+            ><input
+              id="edge"
+              data-param="edge"
+              type="range"
+              min="0"
+              max="1"
+              step=".01"
+            /><label class="range-label" for="edge-variation"
+              >局部边缘 <output></output></label
+            ><input
+              id="edge-variation"
+              data-param="edge_variation"
+              type="range"
+              min="0"
+              max="1"
+              step=".01"
+            />
+          </div>
+          <div class="control-section">
+            <label class="range-label" for="grain">颗粒 <output></output></label
+            ><input
+              id="grain"
+              data-param="grain"
+              type="range"
+              min="0"
+              max="1"
+              step=".01"
+            /><label class="range-label" for="wear"
+              >磨损 <output></output></label
+            ><input
+              id="wear"
+              data-param="wear"
+              type="range"
+              min="0"
+              max="1"
+              step=".01"
+            /><label class="range-label" for="bleed"
+              >洇墨 <output></output></label
+            ><input
+              id="bleed"
+              data-param="bleed"
+              type="range"
+              min="0"
+              max="1"
+              step=".01"
+            />
+          </div>
+          <details class="advanced">
+            <summary>提取与精确选区</summary>
+            <div class="extraction">
+              <label for="mode">提取</label
+              ><select id="mode" data-param="mode">
+                <option value="auto">自动去底</option>
+                <option value="luminance">按明暗</option>
+                <option value="color">指定颜色</option>
+                <option value="alpha">原图透明度</option>
+              </select>
+            </div>
+            <div id="color-extraction" hidden>
+              <div class="source-color-row">
+                <input
+                  id="source-color"
+                  type="color"
+                  data-param="source_color"
+                  aria-label="要提取的颜色"
+                /><button id="pick" class="text-button">吸色</button>
+              </div>
+              <label class="range-label" for="tolerance"
+                >颜色容差 <output></output></label
+              ><input
+                id="tolerance"
+                data-param="tolerance"
+                type="range"
+                min="0"
+                max="1"
+                step=".01"
+              />
+            </div>
+            <div id="tone-extraction">
+              <label class="range-label" for="threshold"
+                >去底强度 <output></output></label
+              ><input
+                id="threshold"
+                data-param="threshold"
+                type="range"
+                min="0"
+                max="1"
+                step=".01"
+              /><label class="range-label" for="softness"
+                >保留灰阶 <output></output></label
+              ><input
+                id="softness"
+                data-param="softness"
+                type="range"
+                min="0"
+                max="1"
+                step=".01"
+              />
+            </div>
+            <label class="checkbox"
+              ><input id="invert" data-param="invert" type="checkbox" />
+              反转</label
+            >
+            <div class="coords">
+              <label
+                >X %<input
+                  id="cx"
+                  type="number"
+                  min="0"
+                  max="99.9"
+                  step=".1" /></label
+              ><label
+                >Y %<input
+                  id="cy"
+                  type="number"
+                  min="0"
+                  max="99.9"
+                  step=".1" /></label
+              ><label
+                >宽 %<input
+                  id="cw"
+                  type="number"
+                  min=".1"
+                  max="100"
+                  step=".1" /></label
+              ><label
+                >高 %<input id="ch" type="number" min=".1" max="100" step=".1"
+              /></label>
+            </div>
+            <button id="apply-region" class="text-button">应用选区</button>
+          </details>
+
+          <div class="recipe-actions">
+            <button id="save-gallery" class="secondary-button">
+              存入 Gallery</button
+            ><button id="reseed" class="text-button">⟳ 换一次落印</button
+            ><button id="download-stamp" class="text-button">单枚 PNG ↗</button>
+          </div>
+        </fieldset>
+      </aside>
+      <section class="poster-panel panel">
+        <div class="panel-heading">
+          <h2>Poster <span id="stamp-count" class="count">0 枚印章</span></h2>
+          <div class="ratio-tools" role="group" aria-label="Poster 比例">
+            <button data-ratio="3:4" aria-pressed="true" class="active">
+              3:4</button
+            ><button data-ratio="1:1" aria-pressed="false">1:1</button
+            ><button data-ratio="9:16" aria-pressed="false">9:16</button>
+          </div>
+        </div>
+        <div id="poster-stage" class="poster-stage">
+          <div id="poster-paper" class="poster-paper" aria-label="Poster 画布">
+            <div id="poster-empty" class="poster-empty">
+              <span>你的下一张 Poster</span>
+              <p>从左侧选一块图案开始</p>
+            </div>
+            <div id="poster-items"></div>
+          </div>
+        </div>
+        <div class="poster-meta">
+          <span id="poster-dimensions">1800 × 2400 px</span
+          ><label class="paper-color"
+            >纸张<input
+              id="paper-color"
+              type="color"
+              value="#faf8f3"
+              aria-label="Poster 纸张颜色" /></label
+          ><span id="preview-status" role="status">准备就绪</span>
+        </div>
+        <div class="layout-controls">
+          <label for="stamp-scale"
+            >大小 <output id="scale-value"></output></label
+          ><input
+            id="stamp-scale"
+            type="range"
+            min="5"
+            max="150"
+            value="60"
+            aria-label="印章大小"
+          /><label for="stamp-rotation"
+            >旋转 <output id="rotation-value"></output></label
+          ><input
+            id="stamp-rotation"
+            type="range"
+            min="-180"
+            max="180"
+            step="0.1"
+            value="0"
+            aria-label="印章旋转"
+          />
+        </div>
+        <div class="poster-actions">
+          <button id="duplicate" class="text-button">复制</button
+          ><button id="send-back" class="text-button">置底</button
+          ><button id="bring-front" class="text-button">置顶</button
+          ><button id="delete-stamp" class="text-button">删除印章</button>
+        </div>
+        <div class="export-row">
+          <select id="export-size" aria-label="Poster 导出长边尺寸">
+            <option value="1600">1600 px</option>
+            <option value="2400" selected>2400 px</option>
+            <option value="3200">3200 px</option></select
+          ><button id="export-poster" class="primary-button">
+            导出 Poster <span>↗</span>
+          </button>
+        </div>
+        <p class="hint poster-hint">
+          点击印章返回原图 · 角点外侧旋转 · 右下角缩放
+        </p>
+      </section>
+    </main>
+    <main id="gallery" class="gallery-view" aria-labelledby="gallery-title" hidden>
+      <div class="panel-heading">
+        <h2 id="gallery-title">
+          Gallery <span id="gallery-total" class="count">0 枚印章</span>
+        </h2>
+        <p class="hint">保存在此浏览器 · 重新编辑会回到原图和参数</p>
+      </div>
+      <div id="gallery-grid" class="gallery-grid" aria-label="已存入的印章"></div>
+      <div id="gallery-empty" class="empty-state gallery-empty" hidden>
+        <span class="empty-icon">印</span>
+        <p>还没有存入的印章</p>
+        <p class="hint">在工坊中调好一枚印章，点击「存入 Gallery」</p>
+        <a href="#studio" class="secondary-button">回到工坊</a>
+      </div>
+    </main>
+    <div id="toast" class="toast" role="status" hidden></div>
+    <script type="module" src="/poster.js"></script>
+  </body>
+</html>
